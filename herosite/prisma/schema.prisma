@@ -1,0 +1,55 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url = "file:./dev.db"
+}
+
+enum Alignment { 
+  HERO
+  VILLAIN
+  ANTI_HERO
+  N_A
+}
+
+model Character {
+  id              Int        @id @default(autoincrement())
+  name            String
+  realname        String
+  description     String
+  species         String
+  icon            String
+
+  alignment       Alignment
+
+  aliases         Alias[] @relation("CharacterAlias")
+  powers          Power[] @relation("CharacterPowers")
+  teams           Team[]  @relation("CharacterTeams")
+}
+
+model Alias {
+  name      String  @id
+
+  personId  Int   
+  person    Character @relation("CharacterAlias", fields: [personId], references:[id])
+}
+
+model Power{
+  name        String  @id
+
+  weilders    Character[] @relation("CharacterPowers")
+}
+
+model Team {
+  id      Int @id @default(autoincrement())
+  name    String
+
+  members Character[] @relation("CharacterTeams")
+}
