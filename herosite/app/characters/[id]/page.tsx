@@ -1,9 +1,11 @@
 import React from "react";
+import { Character } from "@prisma/client"
 import { BASE_URL } from "@/utils/constants";
+import CharacterDisplay from "@/components/characters/characterdisplay";
 
 type CharacterPageProps = {
   params: {
-    id: number;
+    id: string;
   };
 };
 
@@ -17,13 +19,16 @@ export default async function CharacterPage(props: CharacterPageProps) {
 
     if (!resp.ok) {
         return (
-            <p>Hero not found</p>
+            <p>Character not found</p>
         );
     }
-    const data = await resp.json();
+    const data: Character = await resp.json();
 
 
     return (
-        <p>{data.name}</p>
+        <div className="w-full min-h-screen bg-background">
+            <CharacterDisplay  character={data} />
+        </div>
+        
     );
 }
